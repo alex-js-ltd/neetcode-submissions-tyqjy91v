@@ -1,0 +1,44 @@
+function Solution () {};
+
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number[]}
+     */
+Solution.prototype.topKFrequent = function (nums, k) {
+
+    // Create freq map
+    const seen = new Map();
+
+    for(const n of nums) {
+
+        if(!seen.has(n)) {
+            seen.set(n, 0);
+        }
+
+        const freq = seen.get(n) + 1;
+
+        seen.set(n, freq);
+    }
+
+    // Create buckets
+    const buckets = Array.from({length: nums.length + 1}, () => {
+        return [];
+    });
+
+    for(const [num, freq] of seen.entries()) {
+        buckets[freq].push(num);
+    }
+
+    // Iterate in reverse order
+    const res = buckets.reduceRight((acc, curr) => {
+
+            curr.forEach((n) => {
+                acc.push(n);
+            });
+        return acc;
+
+    }, []);
+
+    return res.slice(0, k);
+};
